@@ -1,0 +1,122 @@
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
+
+.register-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 500px;
+
+  h2 {
+    margin-bottom: 0.5rem;
+    color: #333;
+    text-align: center;
+  }
+
+  .subtitle {
+    color: #666;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  width: 100%;
+
+  &.half-width {
+    width: 50%;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+    font-size: 0.9rem;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: white;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    &.invalid {
+      border-color: #dc3545;
+      background-color: #fff8f8;
+    }
+  }
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border: 1px solid #f5c6cb;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+
+  &:hover:not(:disabled) {
+    background-color: #000;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.footer-links {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+
+  a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+}

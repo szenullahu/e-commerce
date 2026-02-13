@@ -1,0 +1,103 @@
+<div class="register-wrapper">
+  <div class="register-card">
+    <h2>Register</h2>
+
+
+    @if (errorMessage) {
+      <div class="alert error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="form-row">
+        <div class="form-group half-width">
+          <label for="firstname">Firstname</label>
+          <input
+            id="firstname"
+            type="text"
+            formControlName="firstname"
+            [class.invalid]="form.get('firstname')?.invalid && form.get('firstname')?.touched"
+          />
+        </div>
+
+        <div class="form-group half-width">
+          <label for="surname">Surname</label>
+          <input
+            id="surname"
+            type="text"
+            formControlName="surname"
+            [class.invalid]="form.get('surname')?.invalid && form.get('surname')?.touched"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          [class.invalid]="form.get('username')?.invalid && form.get('username')?.touched"
+        />
+        @if (form.get('username')?.invalid && form.get('username')?.touched) {
+          <small class="error-text">Username required</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+        />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <small class="error-text">E-Mail required</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          [class.invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+        />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <small class="error-text">Password required</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="profilePicture">Profile Picture</label>
+        <select
+          id="profilePicture"
+          formControlName="profilePicture"
+          [class.invalid]="form.get('profilePicture')?.invalid && form.get('profilePicture')?.touched"
+        >
+          <option [ngValue]="null" disabled>Please choose</option>
+          @for (option of profilePictureOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="submit" [disabled]="form.invalid || isLoading" class="btn-submit">
+        @if (isLoading) {
+          <span class="spinner"></span> Loading
+        } @else {
+          Register
+        }
+      </button>
+
+      <div class="footer-links">
+        Already have an account? <a routerLink="/login">sign up</a>
+      </div>
+
+    </form>
+  </div>
+</div>
