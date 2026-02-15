@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/auth")
 public class AuthController {
 
-    private final AuthService userService;
+    private final AuthService authService;
 
     public AuthController(AuthService userService) {
-        this.userService = userService;
+        this.authService = userService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> register(@Valid @RequestBody RegisterDTO user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(user));
+    public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody RegisterDTO request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(authService.register(request));
     }
 
     @PostMapping("/login")
     public AuthResponseDTO login(@Valid @RequestBody LoginDTO user) {
-        return userService.login(user);
+        return authService.login(user);
     }
 }

@@ -1,0 +1,36 @@
+<div class="p-4">
+  <div class="text-center mb-4">
+    <h4 class="fw-bold">Wähle deinen Avatar</h4>
+    <p class="text-muted small">Klicke auf einen Avatar, um ihn auszuwählen.</p>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+    @for (option of profileOptions; track option) {
+      <div
+        class="avatar-card"
+        [class.selected]="pendingSelection === option"
+        (click)="selectAvatar(option)">
+
+        <img [src]="avatarSrc(option)" class="rounded-circle" width="80" height="80" alt="Avatar">
+
+      </div>
+    }
+  </div>
+</div>
+
+<div class="bg-light p-3 rounded-bottom-4 d-flex justify-content-end gap-2 border-top">
+
+  <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="close.emit()">
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-primary rounded-pill px-4"
+    [disabled]="isSaving || pendingSelection === currentPicture"
+    (click)="save()">
+
+    @if (isSaving) { <span class="spinner-border spinner-border-sm me-2"></span> }
+    Save Changes
+  </button>
+</div>

@@ -1,0 +1,42 @@
+<h4 class="mb-4">Personal Information</h4>
+
+<form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="firstname" class="form-label fw-bold">First Name</label>
+      <input
+        type="text"
+        id="firstname"
+        class="form-control"
+        formControlName="firstname"
+        [class.is-invalid]="profileForm.get('firstname')?.invalid && profileForm.get('firstname')?.touched"
+      />
+      @if (profileForm.get('firstname')?.invalid && profileForm.get('firstname')?.touched) {
+        <div class="invalid-feedback">First name is required.</div>
+      }
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="surname" class="form-label fw-bold">Surname</label>
+      <input
+        type="text"
+        id="surname"
+        class="form-control"
+        formControlName="surname"
+        [class.is-invalid]="profileForm.get('surname')?.invalid && profileForm.get('surname')?.touched"
+      />
+      @if (profileForm.get('surname')?.invalid && profileForm.get('surname')?.touched) {
+        <div class="invalid-feedback">Surname is required.</div>
+      }
+    </div>
+  </div>
+
+  <div class="d-grid mt-3">
+    <button
+      type="submit"
+      class="btn btn-primary rounded-pill"
+      [disabled]="profileForm.invalid || profileForm.pristine">
+      Save Changes
+    </button>
+  </div>
+</form>

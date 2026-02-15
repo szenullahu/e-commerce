@@ -1,0 +1,122 @@
+<div class="container mt-5">
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  } @else if (user()) {
+    @let u = user()!;
+
+    <div class="d-flex align-items-center mb-4">
+
+      <div class="profile-image-container me-3" (click)="toggleAvatarModal()">
+        <img [src]="avatarSrc(u.profilePicture)" class="profile-image shadow-sm" alt="Avatar">
+        <div class="overlay">
+          <i class="bi bi-pencil-fill mb-1 fs-5"></i>
+          <span class="fw-bold small">Change</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="fw-bold mb-0">{{ u.username }}</h2>
+        <span class="text-muted">{{ u.email }}</span>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab() === 'OVERVIEW'" (click)="setActiveTab('OVERVIEW')">Overview</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab() === 'SETTINGS'" (click)="setActiveTab('SETTINGS')">Edit Profile</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab() === 'SECURITY'" (click)="setActiveTab('SECURITY')">Security</button>
+      </li>
+    </ul>
+
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body p-4">
+        @switch (activeTab()) {
+          @case ('OVERVIEW') {
+            <h4 class="mb-4">Profile Details</h4>
+
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <small class="text-muted text-uppercase fw-bold d-block mb-1">First Name</small>
+                  <span class="fs-5 fw-medium">{{ u.firstname }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <small class="text-muted text-uppercase fw-bold d-block mb-1">Surname</small>
+                  <span class="fs-5 fw-medium">{{ u.surname }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <small class="text-muted text-uppercase fw-bold d-block mb-1">Email</small>
+                  <span class="fs-5 fw-medium">{{ u.email }}</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="p-3 border rounded-3 bg-light">
+                  <small class="text-muted text-uppercase fw-bold d-block mb-1">Role</small>
+                  <span class="badge"
+                        [class.bg-danger]="u.role === 'ADMIN'"
+                        [class.bg-primary]="u.role === 'CUSTOMER'">
+                    {{ u.role }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+
+          @case ('SETTINGS') {
+            <h4 class="mb-4">Personal Information</h4>
+            <app-update-profile [userData]="u"></app-update-profile>
+          }
+
+          @case ('SECURITY') {
+            <h4 class="mb-4 fw-bold">Security Settings</h4>
+
+            <div class="mb-5">
+              <h5 class="text-muted mb-3">Change Email Address</h5>
+              <app-update-email [currentEmail]="u.email"></app-update-email>
+            </div>
+
+            <hr class="my-5 opacity-25">
+
+            <div>
+              <h5 class="text-muted mb-3">Change Password</h5>
+              <app-update-password></app-update-password>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    @if (showAvatarModal()) {
+      <div class="modal-backdrop fade show" (click)="toggleAvatarModal()"></div>
+
+      <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-body p-0">
+
+              <app-update-profile-picture
+                [currentPicture]="u.profilePicture"
+                (close)="toggleAvatarModal()">
+              </app-update-profile-picture>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

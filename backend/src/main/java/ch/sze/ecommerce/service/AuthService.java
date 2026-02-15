@@ -12,6 +12,7 @@ import ch.sze.ecommerce.entity.dto.RegisterDTO;
 import ch.sze.ecommerce.repository.BasketRepo;
 import ch.sze.ecommerce.repository.UserRepo;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,22 +42,20 @@ public class AuthService {
         this.basketRepo = basketRepo;
     }
 
-    public UserEntity register(RegisterDTO dto) {
-        if (userRepo.existsByUsername(dto.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-        if (userRepo.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("E-Mail already exists");
-        }
+    @Transactional
+    public AuthResponseDTO register(RegisterDTO dto) {
+        validateUserDoesNotExist(dto.getUsername(), dto.getEmail());
 
-        UserEntity user = new UserEntity();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPassword(encoder.encode(dto.getPassword()));
-        user.setFirstname(dto.getFirstname());
-        user.setSurname(dto.getSurname());
-        user.setProfilePicture(dto.getProfilePicture());
-        user.setRole(Role.CUSTOMER);
+        UserEntity user = createUserEntity(
+                dto.getUsername(),
+                dto.getEmail(),
+                dto.getPassword(),
+                dto.getFirstname(),
+                dto.getSurname(),
+                dto.getProfilePicture(),
+                Role.CUSTOMER
+        );
+
         UserEntity savedUser = userRepo.save(user);
 
         BasketEntity basket = new BasketEntity();
@@ -65,7 +64,13 @@ public class AuthService {
         basket.setTotalPrice(0.0);
 
         basketRepo.save(basket);
-        return savedUser;
+        String token = jwtService.generateToken(savedUser);
+
+        return new AuthResponseDTO(
+                token,
+                savedUser.getUsername(),
+                savedUser.getRole().name()
+        );
     }
 
     public AuthResponseDTO login(@Valid LoginDTO dto) {
@@ -92,7 +97,7 @@ public class AuthService {
             admin.setFirstname("Admin");
             admin.setSurname("User");
             admin.setRole(Role.ADMIN);
-            admin.setProfilePicture(ProfilePicture.AVATAR_1);
+            admin.setProfilePicture(ProfilePicture.GOJO);
 
             userRepo.save(admin);
         }
@@ -116,5 +121,28 @@ public class AuthService {
         admin.setRole(Role.ADMIN);
 
         userRepo.save(admin);
+    }
+
+    private void validateUserDoesNotExist(String username, String email) {
+        if (userRepo.existsByUsername(username)) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+        if (userRepo.existsByEmail(email)) {
+            throw new IllegalArgumentException("E-Mail already taken");
+        }
+    }
+
+    private UserEntity createUserEntity(String username, String email, String rawPassword,
+                                        String firstname, String surname,
+                                        ProfilePicture profilePicture, Role role) {
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(encoder.encode(rawPassword));
+        user.setFirstname(firstname);
+        user.setSurname(surname);
+        user.setProfilePicture(profilePicture);
+        user.setRole(role);
+        return user;
     }
 }

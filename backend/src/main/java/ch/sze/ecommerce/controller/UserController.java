@@ -1,20 +1,19 @@
 package ch.sze.ecommerce.controller;
 
 import ch.sze.ecommerce.config.UserPrincipal;
-import ch.sze.ecommerce.entity.dto.UpdateEmailDTO;
-import ch.sze.ecommerce.entity.dto.UpdatePasswordDTO;
-import ch.sze.ecommerce.entity.dto.UpdateProfileDTO;
-import ch.sze.ecommerce.entity.dto.UserResponseDTO;
+import ch.sze.ecommerce.entity.dto.*;
 import ch.sze.ecommerce.service.DTOMapper;
 import ch.sze.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin
+@PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
 public class UserController {
 
     private final UserService userService;
@@ -30,9 +29,14 @@ public class UserController {
         return ResponseEntity.ok(dtoMapper.toUserDTO(userService.getUser(userPrincipal.getUser())));
     }
 
-    @PutMapping("/profile")
-    public ResponseEntity<UserResponseDTO> updateUserProfile(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateProfileDTO dto) {
+    @PutMapping("profile")
+    public ResponseEntity<UserResponseDTO> updateProfileInfo(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateProfileInfoDTO dto) {
         return ResponseEntity.ok(dtoMapper.toUserDTO(userService.updateProfileInfo(userPrincipal.getUser(), dto)));
+    }
+
+    @PatchMapping("/profile-picture")
+    public ResponseEntity<UserResponseDTO> updateProfilePicture(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid UpdateProfilePictureDTO dto) {
+        return ResponseEntity.ok(dtoMapper.toUserDTO(userService.updateProfilePicture(userPrincipal.getUser(), dto)));
     }
 
     @PutMapping("/email")

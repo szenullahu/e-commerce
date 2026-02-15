@@ -52,7 +52,7 @@ public class AdminController {
 
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<String> deleteUser (@PathVariable UUID userId) {
-        userService.deleteUser(userId);
+        userService.deleteUserById(userId);
         return ResponseEntity.ok("User deleted");
     }
 }
