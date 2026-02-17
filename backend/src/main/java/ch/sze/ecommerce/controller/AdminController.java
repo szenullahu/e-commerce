@@ -1,11 +1,13 @@
 package ch.sze.ecommerce.controller;
 
 import ch.sze.ecommerce.entity.dto.CreateAdminDTO;
+import ch.sze.ecommerce.entity.dto.MessageResponseDTO;
 import ch.sze.ecommerce.entity.dto.UserResponseDTO;
 import ch.sze.ecommerce.service.AuthService;
 import ch.sze.ecommerce.service.DTOMapper;
 import ch.sze.ecommerce.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -45,14 +47,14 @@ public class AdminController {
     }
 
     @PostMapping("/create-admin")
-    public ResponseEntity<?> createAdmin(@RequestBody @Valid CreateAdminDTO dto) {
+    public ResponseEntity<MessageResponseDTO> createAdmin(@RequestBody @Valid CreateAdminDTO dto) {
         authService.createAdmin(dto);
-        return ResponseEntity.ok("Admin Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDTO("Admin created successfully"));
     }
 
     @DeleteMapping("/users/{userId}")
-    public ResponseEntity<String> deleteUser (@PathVariable UUID userId) {
+    public ResponseEntity<MessageResponseDTO> deleteUser (@PathVariable UUID userId) {
         userService.deleteUserById(userId);
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDTO("User deleted"));
     }
 }

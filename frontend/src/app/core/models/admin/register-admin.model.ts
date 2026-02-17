@@ -1,6 +1,6 @@
 import {ProfilePictureOption} from '../user/profile-picture.enum';
 
-export interface RegisterRequest {
+export interface RegisterAdmin {
   username: string;
   email: string;
   password: string;
